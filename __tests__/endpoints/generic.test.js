@@ -19,12 +19,11 @@ describe("GET /api", () => {
 		return request(app)
 			.get("/api")
 			.expect(200)
-			.then(({ text }) => {
-				const parsed = JSON.parse(text);
-				for (const property in parsed) {
-					expect(parsed[property]).toHaveProperty("description");
-					expect(parsed[property]).toHaveProperty("queries");
-					expect(parsed[property]).toHaveProperty("exampleResponse");
+			.then(({ body }) => {
+				for (const property in body) {
+					expect(body[property]).toHaveProperty("description");
+					expect(body[property]).toHaveProperty("queries");
+					expect(body[property]).toHaveProperty("exampleResponse");
 				}
 			});
 	});
