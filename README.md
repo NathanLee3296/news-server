@@ -1,3 +1,6 @@
-# Northcoders News API
+#News server
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+##How to run locally -
+1.  Create two files to setup environment variables - 
+- .env.test containing a path to the test database `PGDATABASE=nc_news_test`
+- .env.development containing a path to the development database `PGDATABASE=nc_news`
