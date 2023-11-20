@@ -13,3 +13,19 @@ describe("/* - will return an error 404 with a suitable message when an incorrec
 			});
 	});
 });
+
+describe("GET /api", () => {
+	test("GET: 200 should return an object describing all the available endpoints on the API ", () => {
+		return request(app)
+			.get("/api")
+			.expect(200)
+			.then(({ text }) => {
+				const parsed = JSON.parse(text);
+				for (const property in parsed) {
+					expect(parsed[property]).toHaveProperty("description");
+					expect(parsed[property]).toHaveProperty("queries");
+					expect(parsed[property]).toHaveProperty("exampleResponse");
+				}
+			});
+	});
+});
