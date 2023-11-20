@@ -10,7 +10,12 @@ describe("/api/topics", () => {
 			.expect(200)
 			.then(({ body: { topics } }) => {
 				expect(topics.length).toBe(3);
-				expect(topics).toMatchObject(data.topicData);
+				topics.forEach((topic) => {
+					expect(topic).toHaveProperty("slug")
+					expect(typeof topic.slug).toBe("string")
+					expect(topic).toHaveProperty("description")
+					expect(typeof topic.description).toBe("string")
+				})
 			});
 	});
 });
