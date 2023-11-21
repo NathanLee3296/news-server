@@ -1,5 +1,8 @@
 const { app, data, seed, db, request } = require("../../testImports");
 
+beforeEach(() => seed(data));
+afterAll(() => db.end());
+
 describe("/api/articles/:article_id", () => {
 	test("GET: 200 - Return an article object to the client using an ID param", () => {
 		return request(app)
