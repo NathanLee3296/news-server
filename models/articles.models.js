@@ -5,8 +5,8 @@ exports.selectArticleById = ({ article_Id }) => {
 		.query("SELECT * FROM articles WHERE article_id = $1", [article_Id])
 		.then(({ rows }) => {
 			if (rows.length === 0) {
-				return Promise.reject({ status: 400, msg: "Wrong Input" });
+				return Promise.reject({ status: 404, msg: "Wrong Input" });
 			}
-			return rows;
+			return rows[0];
 		});
 };
