@@ -1,4 +1,5 @@
 const { app, data, seed, db, request } = require("../../testImports");
+const jsonEndpoints = require("../../endpoints.json");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -20,11 +21,7 @@ describe("GET /api", () => {
 			.get("/api")
 			.expect(200)
 			.then(({ body }) => {
-				for (const property in body) {
-					expect(body[property]).toHaveProperty("description");
-					expect(body[property]).toHaveProperty("queries");
-					expect(body[property]).toHaveProperty("exampleResponse");
-				}
+				expect(body).toMatchObject(jsonEndpoints);
 			});
 	});
 });
