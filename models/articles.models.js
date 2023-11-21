@@ -10,3 +10,10 @@ exports.selectArticleById = ({ article_Id }) => {
 			return rows[0];
 		});
 };
+
+exports.selectArticles = () => {
+	return connection.query("SELECT * FROM articles ORDER BY created_at DESC").then(({ rows }) => {
+
+		return rows;
+	});
+};
