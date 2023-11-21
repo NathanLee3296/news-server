@@ -1,4 +1,5 @@
 const { app, data, seed, db, request } = require("../testImports");
+const jsonEndpoints = require("../endpoints.json");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
