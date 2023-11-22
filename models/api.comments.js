@@ -8,7 +8,7 @@ exports.selectCommentsByID = ({ article_id }) => {
 		)
 		.then(({ rows }) => {
 			if (rows.length === 0) {
-				return Promise.reject({ status: 404, msg: "Wrong Input" });
+				return Promise.reject({ status: 404, msg: "resource not found" });
 			}
 			return rows;
 		});

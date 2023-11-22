@@ -53,7 +53,7 @@ describe("/api/articles/:article_id/comments", () => {
 						body : expect.any(String),
 						votes : expect.any(Number),
 						author : expect.any(String),
-						article_id : expect.any(Number),
+						article_id : 1,
 						created_at : expect.any(String)
 					})
 				})
