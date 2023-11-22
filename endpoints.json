@@ -33,5 +33,13 @@
 				}
 			]
 		}
+	},
+	"POST /api/articles/:article_id/comments": {
+		"description": "Adds a comment to an article and returns posted comment",
+		"queries": [],
+		"exampleResponse": {
+			"comment": [{ "username": "butter_bridge", "body": "Footie!" }]
+		}
 	}
+
 }
