@@ -76,6 +76,26 @@ describe("/api/articles/:article_id/comments", () => {
 	});
 });
 
+describe("api/articles", () => {
+	test("GET: 200 send an array of article objects to the client", () => {
+		return request(app)
+			.get("/api/articles")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSorted({key : 'created_at', descending : true,});
+				articles.forEach((article) => {
+					expect(article).toHaveProperty("author");
+					expect(article).toHaveProperty("title");
+					expect(article).toHaveProperty("article_id");
+					expect(article).toHaveProperty("topic");
+					expect(article).toHaveProperty("created_at");
+					expect(article).toHaveProperty("votes");
+					expect(article).toHaveProperty("comment_count");
+				});
+			});
+	});
+});
+
 describe("/api/topics", () => {
 	test("GET: 200 sends an array of topics to the client", () => {
 		return request(app)
@@ -100,6 +120,16 @@ describe("/* - will return an error 404 with a suitable message when an incorrec
 			.expect(404)
 			.then(({ text }) => {
 				expect(text).toBe("Bad Request: Invalid URL");
+			});
+	});
+});
+describe("GET /api", () => {
+	test("GET: 200 should return an object describing all the available endpoints on the API ", () => {
+		return request(app)
+			.get("/api")
+			.expect(200)
+			.then(({ body }) => {
+				expect(body).toMatchObject(jsonEndpoints);
 			});
 	});
 });
