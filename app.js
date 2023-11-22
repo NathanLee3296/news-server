@@ -15,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_Id", getArticlesById);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleID)
 app.get("/api/articles", getArticles);
 app.get("/api", getApi);
 app.all("/*", handleWrongURLS);
