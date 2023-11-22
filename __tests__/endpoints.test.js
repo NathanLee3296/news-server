@@ -32,10 +32,10 @@ describe("/api/articles/:article_id", () => {
 				expect(body).toEqual({ msg: "Wrong Input" });
 			});
 	});
-	test("GET: 400 - Returns a 400 error as the client did not enter a number ", () => {
+	test("GET: 404 - Returns a 404 error as the client did not enter a number ", () => {
 		return request(app)
 			.get("/api/articles/turtles")
-			.expect(400)
+			.expect(404)
 			.then(({ body }) => {
 				expect(body).toEqual({ msg: "Bad request" });
 			});
@@ -60,23 +60,32 @@ describe("POST /api/articles/:article_id/comments", () => {
 				});
 			});
 	});
-	test("POST: 400 if article_id is an invalid number ", () => {
+	test("POST: 404 if article_id is an invalid number ", () => {
 		return request(app)
 			.post("/api/articles/404/comments")
 			.send({ username: "butter_bridge", body: "Hello World" })
-			.expect(400);
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "Bad request" });
+			});
 	});
-	test("POST: 400 if article_id is an invalid data type ", () => {
+	test("POST: 404 if article_id is an invalid data type ", () => {
 		return request(app)
 			.post("/api/articles/ToTheMooon/comments")
 			.send({ username: "butter_bridge", body: "Hello World" })
-			.expect(400);
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "Bad request" });
+			});
 	});
-	test("POST: 400 if username is not registered ", () => {
+	test("POST: 404 if username is not registered ", () => {
 		return request(app)
 			.post("/api/articles/1/comments")
 			.send({ username: "I_need_to_register!", body: "Hello World" })
-			.expect(400);
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "Bad request" });
+			});
 	});
 	test("POST: 201 if client attempts to SQL inject", () => {
 		return request(app)
@@ -96,6 +105,19 @@ describe("POST /api/articles/:article_id/comments", () => {
 						votes: 0,
 						created_at: expect.any(String),
 					},
+				});
+			});
+	});
+	test("POST: 404 if client missing a body key", () => {
+		return request(app)
+			.post("/api/articles/1/comments")
+			.send({
+				username: "butter_bridge",
+			})
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toMatchObject({
+					"msg": "Bad request"
 				});
 			});
 	});
