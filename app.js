@@ -12,7 +12,7 @@ const {
 } = require("./controllers/articles.controller");
 const { getApi } = require("./controllers/api.controller");
 
-const { getCommentsByArticleID } = require("./controllers/comments.controller");
+const { getCommentsByArticleID, postCommentByArticleId } = require("./controllers/comments.controller");
 
 
 const app = express();

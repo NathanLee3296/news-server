@@ -40,9 +40,11 @@
 		"queries": [],
 		"exampleResponse": {
 			"comment": [{ "username": "butter_bridge", "body": "Footie!" }]
+		}
+	},
 
       
-      "GET /api/articles/:article_id/comments": {
+    "GET /api/articles/:article_id/comments": {
 		"description": "serves an array of comments for a specified article",
 		"queries": [],
 		"exampleResponse": {
