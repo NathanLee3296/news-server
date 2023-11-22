@@ -12,8 +12,9 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = () => {
-	return connection.query("SELECT * FROM articles ORDER BY created_at DESC").then(({ rows }) => {
-
-		return rows;
-	});
+	return connection
+		.query("SELECT * FROM articles ORDER BY created_at DESC")
+		.then(({ rows }) => {
+			return rows;
+		});
 };

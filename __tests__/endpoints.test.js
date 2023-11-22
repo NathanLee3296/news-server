@@ -41,6 +41,9 @@ describe("/api/articles/:article_id", () => {
 			});
 	});
 });
+
+
+
 describe("POST /api/articles/:article_id/comments", () => {
 	test("POST: 201 - Posts a comment to an article and returns posted comment ", () => {
 		return request(app)
@@ -120,6 +123,43 @@ describe("POST /api/articles/:article_id/comments", () => {
 					"msg": "Bad request"
 				});
 			});
+
+    
+    
+describe("/api/articles/:article_id/comments", () => {
+	test("GET 200: Serve all comments for a specified article to the client", () => {
+		return request(app)
+			.get("/api/articles/1/comments")
+			.expect(200)
+			.then(({body : {comments}}) => {
+				expect(comments.length).toBe(11)
+				expect(comments).toBeSorted({key : 'created_at', descending : true,});
+				comments.forEach((comment) => {
+					expect(comment).toMatchObject({
+						body : expect.any(String),
+						votes : expect.any(Number),
+						author : expect.any(String),
+						article_id : 1,
+						created_at : expect.any(String)
+					})
+				})
+				
+			});
+	});
+	test("GET 404: Respond with an error if articleID is a number but not valid", () => {
+		return request(app)
+			.get("/api/articles/404/comments")
+			.expect(404)
+	});
+	test('GET: 400 Respond with an error if incorrect data type is used', () => {
+		return request(app)
+			.get("/api/articles/hello/comments")
+			.expect(400)
+			.then(({body}) => {
+				expect(body).toEqual( { msg: 'Bad request' })
+			});
+		
+
 	});
 });
 
@@ -180,3 +220,4 @@ describe("GET /api", () => {
 			});
 	});
 });
+

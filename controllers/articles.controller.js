@@ -2,6 +2,7 @@ const { createRef } = require("../db/seeds/utils");
 const {
 	selectArticleById,
 	selectArticles,
+	updateArticleVotes,
 } = require("../models/articles.models");
 const { selectCommentCounts } = require("../models/comments.model");
 
@@ -28,3 +29,5 @@ exports.getArticles = (req, res, next) => {
 		})
 		.catch((err) => next(err));
 };
+
+
