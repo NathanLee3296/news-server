@@ -1,4 +1,4 @@
-const { selectCommentsByID } = require("../models/api.comments")
+const { selectCommentsByID } = require("../models/comments.model")
 
 
 exports.getCommentsByArticleID = (req, res, next) => {
@@ -8,3 +8,4 @@ exports.getCommentsByArticleID = (req, res, next) => {
     next(err)
   })
 }
+

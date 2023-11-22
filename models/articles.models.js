@@ -1,3 +1,4 @@
+const { error } = require("console");
 const connection = require("../db/connection");
 
 exports.selectArticleById = ({ article_Id }) => {
@@ -12,8 +13,23 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = () => {
-	return connection.query("SELECT * FROM articles ORDER BY created_at DESC").then(({ rows }) => {
+	return connection
+		.query("SELECT * FROM articles ORDER BY created_at DESC")
+		.then(({ rows }) => {
+			return rows;
+		});
+};
 
-		return rows;
-	});
+exports.updateArticleVotes = (params, body) => {
+	return connection
+		.query(
+			"UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *",
+			[body.inc_votes, params.article_id]
+		)
+		.then(({ rows }) => {
+			if (!rows.length) {
+				return Promise.reject({ status: 404, msg: "resource not found" });
+			}
+			return rows[0];
+		});
 };
