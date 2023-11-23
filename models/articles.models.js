@@ -31,5 +31,12 @@ exports.updateArticleVotes = (params, body) => {
 				return Promise.reject({ status: 404, msg: "resource not found" });
 			}
 			return rows[0];
+		})
+		.catch((err) => {
+			if (err.status === 404)
+				return Promise.reject({ status: 404, msg: "resource not found" });
+			else {
+				return Promise.reject({ status: 400, msg: "Bad request" });
+			}
 		});
 };

@@ -174,11 +174,11 @@ describe("PATCH: /api/articles/:article_id ", () => {
 				});
 			});
 	});
-	test("PATCH: 404 if the client sends a non-number as the value", () => {
+	test("PATCH: 400 if the client sends a non-number as the value", () => {
 		return request(app)
 			.patch("/api/articles/1")
 			.send({ inc_votes: "tony" })
-			.expect(404)
+			.expect(400)
 			.then(({ body }) => {
 				expect(body).toMatchObject({ msg: "Bad request" });
 			});
@@ -192,13 +192,23 @@ describe("PATCH: /api/articles/:article_id ", () => {
 				expect(body).toMatchObject({ msg: "resource not found" });
 			});
 	});
-	test("PATCH: 404 if the client send an SQL injection", () => {
+	test("PATCH: 400 if the client send an SQL injection", () => {
 		return request(app)
 			.patch("/api/articles/1")
 			.send({ inc_votes: ";DROP Table comments;" })
-			.expect(404)
+			.expect(400)
 			.then(({ body }) => {
 				expect(body).toMatchObject({ msg: "Bad request" });
 			});
+	});
+	test('PATCH: 400 client sends not a number as the article_id', () => {
+		return request(app)
+			.patch("/api/articles/notanum")
+			.send({ inc_votes: 10 })
+			.expect(400)
+			.then(({body}) => {
+				expect(body).toEqual({"msg": "Bad request"})
+			});
+		
 	});
 });
