@@ -22,8 +22,6 @@ exports.selectCommentsByID = ({ article_id }) => {
 		});
 };
 
-
-
 exports.insertComment = (param, body) => {
 	return connection
 		.query(
@@ -37,4 +35,15 @@ exports.insertComment = (param, body) => {
 		.then(({ rows }) => {
 			return rows[0];
 		});
+};
 
+exports.deleteCommentsByID = ({comment_id}) => {
+	return connection
+		.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`,[comment_id])
+		.then(({ rows }) => {
+			if (!rows.length) {
+				return Promise.reject({ status: 400, msg: "resource not found" });
+			}
+			return rows[0]
+		});
+};

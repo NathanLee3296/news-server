@@ -43,8 +43,7 @@
 		}
 	},
 
-      
-    "GET /api/articles/:article_id/comments": {
+	"GET /api/articles/:article_id/comments": {
 		"description": "serves an array of comments for a specified article",
 		"queries": [],
 		"exampleResponse": {
@@ -84,6 +83,10 @@
 				}
 			]
 		}
+	},
+	"DELETE /api/comments/:comment_id": {
+		"description": "deletes a comment using the comment_id as the parameter",
+		"queries": [],
+		"exampleResponse": {"status" : 204}
 	}
-
 }
