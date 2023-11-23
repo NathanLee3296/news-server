@@ -101,5 +101,9 @@
 				}
 			]
 		}
+	"DELETE /api/comments/:comment_id": {
+		"description": "deletes a comment using the comment_id as the parameter",
+		"queries": [],
+		"exampleResponse": {"status" : 204}
 	}
 }
