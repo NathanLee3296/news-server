@@ -300,10 +300,10 @@ describe("DELETE /api/comments/:comment_id", () => {
 	test("DELETE: 204 returns no content", () => {
 		return request(app).delete("/api/comments/1").expect(204);
 	});
-	test("DELETE: 400 returns error if invalid number comment ID", () => {
-		return request(app).delete("/api/comments/404").expect(400);
+	test("DELETE: 404 returns error if invalid number comment ID", () => {
+		return request(app).delete("/api/comments/404").expect(404);
 	});
-	test("DELETE: 404 returns error if invalid non-number comment ID", () => {
+	test("DELETE: 400 returns error if invalid non-number comment ID", () => {
 		return request(app).delete("/api/comments/fourohfour").expect(404);
 	});
 });
