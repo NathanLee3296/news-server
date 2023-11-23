@@ -30,6 +30,7 @@ exports.getArticles = (req, res, next) => {
 		.catch((err) => next(err));
 };
 
+
 exports.patchArticleById = (req, res, next) => {
 	const { params, body } = req;
 	return updateArticleVotes(params, body)
@@ -40,3 +41,6 @@ exports.patchArticleById = (req, res, next) => {
 			next(err);
 		});
 };
+
+
+

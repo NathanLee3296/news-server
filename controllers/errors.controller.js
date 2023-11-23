@@ -3,7 +3,7 @@ exports.handleWrongURLS = (req, res, next) => {
 };
 
 exports.handlePsqlErrors = (err, req, res, next) => {
-	if (err.code === "22P02" || err.code === "23502") {
+	if (err.code === "22P02" || err.code === "23502" || err.code === "23503") {
 		res.status(404).send({ msg: "Bad request" });
 	} else next(err);
 };
