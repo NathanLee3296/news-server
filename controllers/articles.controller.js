@@ -17,13 +17,13 @@ exports.getArticlesById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-	selectArticles()
+	const { query } = req;
+	selectArticles(query)
 		.then((articles) => {
 			res.status(200).send({ articles });
 		})
 		.catch((err) => next(err));
 };
-
 
 exports.patchArticleById = (req, res, next) => {
 	const { params, body } = req;
@@ -35,6 +35,3 @@ exports.patchArticleById = (req, res, next) => {
 			next(err);
 		});
 };
-
-
-
