@@ -365,3 +365,18 @@ describe("GET /api/articles (topic query)", () => {
 		return request(app).get("/api/articles?woohoo=1").expect(404);
 	});
 });
+
+describe('(FEATURE REQUEST) - GET /api/articles/:article_id (comment_count)', () => {
+	test('The returned article should also have a comment_count', () => {
+		return request(app)
+			.get("/api/articles/1")
+			.expect(200)
+			.then(({body : {article}}) => {
+				expect(article).toMatchObject({
+					comment_count : "11"
+				})
+			});
+		
+	});
+});
+
