@@ -1,6 +1,7 @@
 const { app, data, seed, db, request } = require("../testImports");
 const jsonEndpoints = require("../endpoints.json");
 const { expect } = require("@jest/globals");
+const { response } = require("../app");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -284,14 +285,25 @@ describe("PATCH: /api/articles/:article_id ", () => {
 				expect(body).toMatchObject({ msg: "Bad request" });
 			});
 	});
-	test('PATCH: 400 client sends not a number as the article_id', () => {
+	test("PATCH: 400 client sends not a number as the article_id", () => {
 		return request(app)
 			.patch("/api/articles/notanum")
 			.send({ inc_votes: 10 })
 			.expect(400)
-			.then(({body}) => {
-				expect(body).toEqual({"msg": "Bad request"})
+			.then(({ body }) => {
+				expect(body).toEqual({ msg: "Bad request" });
 			});
-		
+	});
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+	test("DELETE: 204 returns no content", () => {
+		return request(app).delete("/api/comments/1").expect(204);
+	});
+	test("DELETE: 404 returns error if invalid number comment ID", () => {
+		return request(app).delete("/api/comments/404").expect(404);
+	});
+	test("DELETE: 400 returns error if invalid non-number comment ID", () => {
+		return request(app).delete("/api/comments/fourohfour").expect(404);
 	});
 });
