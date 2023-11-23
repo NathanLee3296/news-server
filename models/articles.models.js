@@ -12,13 +12,26 @@ exports.selectArticleById = ({ article_Id }) => {
 		});
 };
 
-exports.selectArticles = () => {
+exports.selectArticles = (query) => {
+	
+	if (Object.entries(query) != 0 && !query.hasOwnProperty("topic")) {
+		return Promise.reject({ status: 404, msg: "Invalid query type" });
+	}
+
+	const search = query.topic || null;
+
 	return connection
 		.query(
-			`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.author) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.author,  articles.title,  articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ORDER BY created_at DESC;`
+			`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.author) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id 
+			WHERE articles.topic = COALESCE($1, articles.topic)
+			GROUP BY articles.author,  articles.title,  articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ORDER BY created_at DESC;`,
+			[search]
 		)
 		.then(({ rows }) => {
-			console.log(rows);
+			const topicArray = ["mitch", "catch", "paper"]
+			if (!rows.length && ( !search  || !topicArray.includes(search)) ) {
+				return Promise.reject({ status: 404, msg: "resource not found" });
+			}
 			return rows;
 		});
 };

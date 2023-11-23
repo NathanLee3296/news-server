@@ -308,23 +308,63 @@ describe("DELETE /api/comments/:comment_id", () => {
 	});
 });
 
-
-
-describe('GET /api/users', () => {
-	test('GET 200: return array of users on key users', () => {
+describe("GET /api/users", () => {
+	test("GET 200: return array of users on key users", () => {
 		return request(app)
 			.get("/api/users")
 			.expect(200)
-			.then(({body : {users}}) => {
-				expect(users.length).toBe(4)
+			.then(({ body: { users } }) => {
+				expect(users.length).toBe(4);
 				users.forEach((user) => {
 					expect(user).toMatchObject({
-						username : expect.any(String),
-						name : expect.any(String),
-						avatar_url : expect.any(String)
-					})
-				})
+						username: expect.any(String),
+						name: expect.any(String),
+						avatar_url: expect.any(String),
+					});
+				});
+			});
+	});
+});
+
+describe("GET /api/articles (topic query)", () => {
+	test("GET: 200 Serve client an object array of articles matching the queried topic ", () => {
+		return request(app)
+			.get("/api/articles?topic=mitch")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles.length).toBe(12);
+				expect(articles).toBeSorted({ key: "created_at", descending: true });
+				articles.forEach((article) => {
+					expect(article).toMatchObject({
+						author: expect.any(String),
+						title: expect.any(String),
+						article_id: expect.any(Number),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(String),
+					});
+				});
+			});
+	});
+	test('"GET: 404 if queried topic is not a valid topic"', () => {
+		return request(app)
+			.get("/api/articles?topic=tortoise")
+			.expect(404)
+	});
+	test('GET: ?? if queried topic is valid but has no articles', () => {
+		return request(app)
+			.get("/api/articles?topic=paper")
+			.expect(200)
+			.then((response) => {
+				expect();
 			});
 		
+	});
+	test('"GET: 404: if query is invalid"', () => {
+		return request(app)
+			.get("/api/articles?woohoo=1")
+			.expect(404)
 	});
 });
