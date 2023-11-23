@@ -348,12 +348,21 @@ describe("GET /api/articles (topic query)", () => {
 				});
 			});
 	});
-	test('"GET 404: if queried topic is not a valid topic"', () => {
+	test('"GET: 404 if queried topic is not a valid topic"', () => {
 		return request(app)
 			.get("/api/articles?topic=tortoise")
 			.expect(404)
 	});
-	test('"GET 404: if query is invalid"', () => {
+	test('GET: ?? if queried topic is valid but has no articles', () => {
+		return request(app)
+			.get("/api/articles?topic=paper")
+			.expect(200)
+			.then((response) => {
+				expect();
+			});
+		
+	});
+	test('"GET: 404: if query is invalid"', () => {
 		return request(app)
 			.get("/api/articles?woohoo=1")
 			.expect(404)

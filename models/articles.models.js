@@ -13,7 +13,6 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = (query) => {
-
 	
 	if (Object.entries(query) != 0 && !query.hasOwnProperty("topic")) {
 		return Promise.reject({ status: 404, msg: "Invalid query type" });
@@ -29,7 +28,8 @@ exports.selectArticles = (query) => {
 			[search]
 		)
 		.then(({ rows }) => {
-			if (!rows.length) {
+			const topicArray = ["mitch", "catch", "paper"]
+			if (!rows.length && ( !search  || !topicArray.includes(search)) ) {
 				return Promise.reject({ status: 404, msg: "resource not found" });
 			}
 			return rows;
