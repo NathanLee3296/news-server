@@ -32,6 +32,7 @@ describe("/api/articles/:article_id", () => {
 				expect(body).toEqual({ msg: "Wrong Input" });
 			});
 	});
+
 	test("GET: 404 - Returns a 404 error as the client did not enter a number ", () => {
 		return request(app)
 			.get("/api/articles/turtles")
@@ -130,10 +131,7 @@ describe("/api/articles/:article_id/comments", () => {
 			.expect(200)
 			.then(({ body: { comments } }) => {
 				expect(comments.length).toBe(11);
-				expect(comments).toBeSorted({
-					key: "created_at",
-					descending: true,
-				});
+				expect(comments).toBeSorted({ key: "created_at", descending: true });
 				comments.forEach((comment) => {
 					expect(comment).toMatchObject({
 						body: expect.any(String),
@@ -164,10 +162,7 @@ describe("api/articles", () => {
 			.get("/api/articles")
 			.expect(200)
 			.then(({ body: { articles } }) => {
-				expect(articles).toBeSorted({
-					key: "created_at",
-					descending: true,
-				});
+				expect(articles).toBeSorted({ key: "created_at", descending: true });
 				articles.forEach((article) => {
 					expect(article).toHaveProperty("author");
 					expect(article).toHaveProperty("title");
@@ -216,5 +211,87 @@ describe("GET /api", () => {
 			.then(({ body }) => {
 				expect(body).toMatchObject(jsonEndpoints);
 			});
+	});
+});
+
+describe("PATCH: /api/articles/:article_id ", () => {
+	test("PATCH: 200 increase votes ", () => {
+		return request(app)
+			.patch("/api/articles/1")
+			.send({ inc_votes: 50 })
+			.expect(200)
+			.then(({ body }) => {
+				expect(body).toMatchObject({
+					article: {
+						article_id: 1,
+						title: "Living in the shadow of a great man",
+						topic: "mitch",
+						author: "butter_bridge",
+						body: "I find this existence challenging",
+						created_at: "2020-07-09T20:11:00.000Z",
+						votes: 150,
+						article_img_url:
+							"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					},
+				});
+			});
+	});
+	test("PATCH: 200 decrease votes to a negative number", () => {
+		return request(app)
+			.patch("/api/articles/1")
+			.send({ inc_votes: -500 })
+			.expect(200)
+			.then(({ body }) => {
+				expect(body).toMatchObject({
+					article: {
+						article_id: 1,
+						title: "Living in the shadow of a great man",
+						topic: "mitch",
+						author: "butter_bridge",
+						body: "I find this existence challenging",
+						created_at: "2020-07-09T20:11:00.000Z",
+						votes: -400,
+						article_img_url:
+							"https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+					},
+				});
+			});
+	});
+	test("PATCH: 400 if the client sends a non-number as the value", () => {
+		return request(app)
+			.patch("/api/articles/1")
+			.send({ inc_votes: "tony" })
+			.expect(400)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "Bad request" });
+			});
+	});
+	test("PATCH: 404 if the client send an incorrect article_id", () => {
+		return request(app)
+			.patch("/api/articles/404")
+			.send({ inc_votes: 10 })
+			.expect(404)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "resource not found" });
+			});
+	});
+	test("PATCH: 400 if the client send an SQL injection", () => {
+		return request(app)
+			.patch("/api/articles/1")
+			.send({ inc_votes: ";DROP Table comments;" })
+			.expect(400)
+			.then(({ body }) => {
+				expect(body).toMatchObject({ msg: "Bad request" });
+			});
+	});
+	test('PATCH: 400 client sends not a number as the article_id', () => {
+		return request(app)
+			.patch("/api/articles/notanum")
+			.send({ inc_votes: 10 })
+			.expect(400)
+			.then(({body}) => {
+				expect(body).toEqual({"msg": "Bad request"})
+			});
+		
 	});
 });

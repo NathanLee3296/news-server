@@ -22,6 +22,8 @@ exports.selectCommentsByID = ({ article_id }) => {
 		});
 };
 
+
+
 exports.insertComment = (param, body) => {
 	return connection
 		.query(
@@ -35,4 +37,4 @@ exports.insertComment = (param, body) => {
 		.then(({ rows }) => {
 			return rows[0];
 		});
-};
+
