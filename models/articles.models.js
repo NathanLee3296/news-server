@@ -14,7 +14,6 @@ exports.selectArticleById = ({ article_Id }) => {
 
 exports.selectArticles = (query) => {
 	const search = query.topic || null;
-	console.log(search)
 
 	return connection
 		.query(
