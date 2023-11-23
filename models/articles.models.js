@@ -13,6 +13,12 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = (query) => {
+
+	
+	if (Object.entries(query) != 0 && !query.hasOwnProperty("topic")) {
+		return Promise.reject({ status: 404, msg: "Invalid query type" });
+	}
+
 	const search = query.topic || null;
 
 	return connection
@@ -26,7 +32,6 @@ exports.selectArticles = (query) => {
 			if (!rows.length) {
 				return Promise.reject({ status: 404, msg: "resource not found" });
 			}
-			console.log(rows);
 			return rows;
 		});
 };

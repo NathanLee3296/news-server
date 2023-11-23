@@ -353,4 +353,9 @@ describe("GET /api/articles (topic query)", () => {
 			.get("/api/articles?topic=tortoise")
 			.expect(404)
 	});
+	test('"GET 404: if query is invalid"', () => {
+		return request(app)
+			.get("/api/articles?woohoo=1")
+			.expect(404)
+	});
 });
