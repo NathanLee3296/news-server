@@ -3,7 +3,10 @@ const connection = require("../db/connection");
 
 exports.selectArticleById = ({ article_Id }) => {
 	return connection
-		.query("SELECT * FROM articles WHERE article_id = $1", [article_Id])
+		.query(
+			`SELECT articles.*, COUNT(comments.comment_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.*, articles.article_id`,
+			[article_Id]
+		)
 		.then(({ rows }) => {
 			if (rows.length === 0) {
 				return Promise.reject({ status: 404, msg: "Wrong Input" });
@@ -13,7 +16,6 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = (query) => {
-	
 	if (Object.entries(query) != 0 && !query.hasOwnProperty("topic")) {
 		return Promise.reject({ status: 404, msg: "Invalid query type" });
 	}
@@ -28,8 +30,8 @@ exports.selectArticles = (query) => {
 			[search]
 		)
 		.then(({ rows }) => {
-			const topicArray = ["mitch", "catch", "paper"]
-			if (!rows.length && ( !search  || !topicArray.includes(search)) ) {
+			const topicArray = ["mitch", "catch", "paper"];
+			if (!rows.length && (!search || !topicArray.includes(search))) {
 				return Promise.reject({ status: 404, msg: "resource not found" });
 			}
 			return rows;
