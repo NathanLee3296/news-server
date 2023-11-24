@@ -16,7 +16,7 @@ This project is the backend of a **social news website and forum**  where users 
 - `npm run setup-dbs`
 - `npm run seed` 
 4.  You will need to create two files in the **root** folder of the repository
-- ".env.test" which will contain the code  -`PGDATABASE=nc_news_test`
+- ".env.test" which will contain  -`PGDATABASE=nc_news_test`
 - ".env.development" which will contain - `PGDATABASE=nc_news`
 5.  You should then be able to run the test suite to ensure everything is working correctly!
 - `npm run tests` 

@@ -366,17 +366,50 @@ describe("GET /api/articles (topic query)", () => {
 	});
 });
 
-describe('(FEATURE REQUEST) - GET /api/articles/:article_id (comment_count)', () => {
-	test('The returned article should also have a comment_count', () => {
+describe("(FEATURE REQUEST) - GET /api/articles/:article_id (comment_count)", () => {
+	test("The returned article should also have a comment_count", () => {
 		return request(app)
 			.get("/api/articles/1")
 			.expect(200)
-			.then(({body : {article}}) => {
+			.then(({ body: { article } }) => {
 				expect(article).toMatchObject({
-					comment_count : "11"
-				})
+					comment_count: "11",
+				});
 			});
-		
 	});
 });
 
+describe("(FEATURE REQUEST) - GET /api/articles (sorting queries)", () => {
+	test("GET 200: returns article sorted by valid column ", () => {
+		return request(app)
+			.get("/api/articles?sort_by=votes")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSorted({ key: "votes", descending: true });
+			});
+	});
+	test('GET 400: returns error if sorted by non-valid column', () => {
+		return request(app)
+			.get("/api/articles?sort_by=level")
+			.expect(404)
+			.then(({body}) => {
+				expect(body).toMatchObject({msg: "Invalid query type" })
+			});
+	});
+	test("GET 200: returns article sorted by valid column and ordered ", () => {
+		return request(app)
+			.get("/api/articles?sort_by=votes&order=ASC")
+			.expect(200)
+			.then(({ body: { articles } }) => {
+				expect(articles).toBeSorted({ key: "votes", descending: false });
+			});
+	});
+	test('GET 400: returns error if sorted by non-valid column', () => {
+		return request(app)
+			.get("/api/articles?order=DROP TABLE comments ")
+			.expect(404)
+			.then(({body}) => {
+				expect(body).toMatchObject({msg: "Invalid query type" })
+			});
+	});
+});
