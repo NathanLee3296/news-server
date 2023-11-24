@@ -1,4 +1,3 @@
-const { error } = require("console");
 const connection = require("../db/connection");
 
 exports.selectArticleById = ({ article_Id }) => {
@@ -16,17 +15,38 @@ exports.selectArticleById = ({ article_Id }) => {
 };
 
 exports.selectArticles = (query) => {
-	if (Object.entries(query) != 0 && !query.hasOwnProperty("topic")) {
-		return Promise.reject({ status: 404, msg: "Invalid query type" });
+	const isQuery = Object.entries(query) != 0;
+	let search = null;
+	let sortedBy = "created_at";
+	let orderOfResults = "DESC";
+	if (isQuery) {
+		const validSorts = [
+			"title",
+			"topic",
+			"author",
+			"body",
+			"created_at",
+			"votes",
+		];
+		const validOrder = ["DESC", "ASC"];
+		const validTopic = ["mitch", "catch", "paper"];
+		const { sort_by, order, topic } = query;
+		if (
+			!(sort_by || order || topic) ||
+			(sort_by && !validSorts.includes(sort_by)) ||
+			(order && !validOrder.includes(order))
+		) {
+			return Promise.reject({ status: 404, msg: "Invalid query type" });
+		}
+		search = topic || null;
+		sortedBy = sort_by || "created_at";
+		orderOfResults = order || "DESC";
 	}
-
-	const search = query.topic || null;
-
 	return connection
 		.query(
 			`SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.author) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id 
 			WHERE articles.topic = COALESCE($1, articles.topic)
-			GROUP BY articles.author,  articles.title,  articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ORDER BY created_at DESC;`,
+			GROUP BY articles.author,  articles.title,  articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url ORDER BY ${sortedBy} ${orderOfResults};`,
 			[search]
 		)
 		.then(({ rows }) => {
